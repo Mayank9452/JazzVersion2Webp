@@ -1,0 +1,294 @@
+import React from "react";
+import { Autoplay, EffectCoverflow } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { useNavigate } from "react-router-dom";
+import { Target, Play, Phone, PhoneCall, Gift, Coins } from "lucide-react";
+import { useTheme } from "next-themes";
+
+// Import Swiper styles for coverflow
+import "swiper/css";
+import "swiper/css/effect-coverflow";
+
+interface TargetGame {
+    id: string;
+    name: string;
+    image: string;
+    target: string;
+    prize: string;
+}
+
+const TopupIcon = ({ className = "w-6 h-6" }: { className?: string }) => {
+    return (
+        <div className={`relative ${className}`}>
+            <svg
+                viewBox="0 0 80 80"
+                className="w-full h-full"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                {/* Mobile Outline */}
+                <rect
+                    x="12"
+                    y="3"
+                    width="48"
+                    height="74"
+                    rx="6"
+                    stroke="currentColor"
+                    strokeWidth="6"
+                />
+
+                {/* Top Speaker / Camera */}
+                <rect
+                    x="31"
+                    y="7"
+                    width="10"
+                    height="2.5"
+                    rx="1.25"
+                    fill="currentColor"
+                />
+
+                {/* Top Bezel Divider */}
+                <path
+                    d="M12 12H60"
+                    stroke="currentColor"
+                    strokeWidth="6"
+                />
+
+                {/* Bottom Bezel Divider */}
+                <path
+                    d="M12 68H60"
+                    stroke="currentColor"
+                    strokeWidth="6"
+                />
+
+                {/* Speed / Power Lines */}
+                <rect
+                    x="30"
+                    y="31"
+                    width="10"
+                    height="2.5"
+                    rx="1.25"
+                    fill="currentColor"
+                />
+
+                <rect
+                    x="26"
+                    y="39"
+                    width="14"
+                    height="2.5"
+                    rx="1.25"
+                    fill="currentColor"
+                />
+
+                <rect
+                    x="30"
+                    y="47"
+                    width="10"
+                    height="2.5"
+                    rx="1.25"
+                    fill="currentColor"
+                />
+
+                {/* Floating Circle */}
+                <circle
+                    cx="61"
+                    cy="40"
+                    r="14"
+                    fill="black"
+                    stroke="currentColor"
+                    strokeWidth="6"
+                />
+
+                {/* Lightning Bolt */}
+                <path
+                    d="
+            M63 31
+            L56 40.5
+            H61
+            L58.5 50
+            L66 39
+            H62
+            L64.5 31
+            Z
+          "
+                    fill="currentColor"
+                />
+            </svg>
+        </div>
+    );
+};
+
+const targetGames: TargetGame[] = [
+    {
+        id: "1",
+        name: "Zombie Uprising",
+        image: "/assets/images/4.png",
+        target: "30000",
+        prize: "100000 Coins",
+    },
+    {
+        id: "2",
+        name: "Alien Galaxy War",
+        image: "/assets/images/6.png",
+        target: "25000",
+        prize: "Rs 100000 Giftkarte",
+    },
+    {
+        id: "3",
+        name: "Tropical Slicer",
+        image: "/assets/images/9.png",
+        target: "45000",
+        prize: "Rs 100000 Topup",
+    },
+    {
+        id: "4",
+        name: "Box Tower",
+        image: "/assets/images/285-380.png",
+        target: "35000",
+        prize: "100000 Coins",
+    },
+    {
+        id: "5",
+        name: "Knife Ninja",
+        image: "/assets/images/knife ninja.jpeg",
+        target: "40000",
+        prize: "Rs 100000 Giftkarte",
+    },
+];
+
+const formatNumberInText = (text: string) => {
+    if (!text) return "";
+    return text.replace(/\d+/g, (match) => Number(match).toLocaleString('en-IN'));
+};
+
+export const TargetChallengeZone: React.FC = () => {
+    const navigate = useNavigate();
+    const { resolvedTheme } = useTheme();
+    const isDark = resolvedTheme === "dark";
+
+    const handlePlayClick = () => {
+        navigate("/games");
+    };
+
+    return (
+        <div className="mb-9 overflow-visible mt-2">
+            {/* Carousel Slider with 3D Coverflow Effect */}
+            <div className="w-full overflow-visible">
+                <Swiper
+                    effect={"coverflow"}
+                    grabCursor={true}
+                    centeredSlides={true}
+                    loop={true}
+                    slidesPerView={2.2}
+                    spaceBetween={3}
+                    autoplay={{
+                        delay: 3000,
+                        disableOnInteraction: false,
+                    }}
+                    coverflowEffect={{
+                        rotate: 0,       // Angle of rotation for side slides
+                        stretch: -10,     // Overlap of cards (negative pulls them closer)
+                        depth: 50,       // Z-depth pushing side cards back
+                        modifier: 1,      // Effect multiplier
+                        slideShadows: false,
+                    }}
+                    modules={[Autoplay, EffectCoverflow]}
+                    className="w-full flex justify-center items-center overflow-visible"
+                >
+                    {targetGames.map((game, index) => {
+                        const rewardType = index % 3; // 0 = Coins, 1 = Voucher, 2 = Topup
+                        return (
+                            <SwiperSlide
+                                key={game.id}
+                                className="overflow-visible cursor-pointer group relative"
+                                // style={{ width: "200px" }}
+                                onClick={handlePlayClick}
+                            >
+                                {({ isActive }) => (
+                                    <div
+                                        className={`w-full flex flex-col transition-all duration-500 ease-out relative ${isActive
+                                            ? "opacity-100 scale-[1.1]"
+                                            : "opacity-90 scale-[0.7]"
+                                            }`}
+                                    >
+                                        {/* Yellow blur glow behind the transparent/opaque banner */}
+                                        <div className="absolute top-[40%] left-[50%] -translate-x-[50%] -translate-y-[50%] w-[50%] aspect-square rounded-full bg-[#FFCA20]/25 blur-[5px] pointer-events-none z-0" />
+
+                                        {/* Game Image Banner */}
+                                        <div className="relative w-full aspect-[285/380] rounded-xl overflow-visible z-10">
+                                            <img
+                                                src={game.image}
+                                                loading="eager"
+                                                decoding="async"
+                                                className="w-full h-full rounded-lg block object-cover transition-transform duration-500 group-hover:scale-105"
+                                                style={{
+                                                    filter: "drop-shadow(0 0 10px rgba(255, 203, 32, 0.95))"
+                                                }}
+                                                alt={game.name}
+                                            />
+
+                                            {/* Background dim overlay for inactive slides */}
+                                            {/* {!isActive && (
+                                                <div className="absolute inset-0 bg-black/30 transition-opacity duration-300 pointer-events-none" />
+                                            )} */}
+
+                                            {/* Floating Play Button on Bottom Right */}
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handlePlayClick();
+                                                }}
+                                                className="absolute bottom-2 right-2 z-10 w-7 h-7 rounded-full flex items-center justify-center bg-brand-gradient hover:brightness-110 text-brand-black-100 shadow-md active:scale-90 transition-all shrink-0 pointer-events-auto dark:border-2 border-white"
+                                                aria-label="Play Game"
+                                            >
+                                                <Play className="h-3.5 w-3.5 fill-brand-black-100 text-brand-black-100 ml-0.5" />
+                                            </button>
+                                        </div>
+
+                                        {/* Target Row */}
+                                        <div className="flex items-center justify-center gap-1 py-1.5 pb-0">
+                                            <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-900/90 dark:bg-white/[0.08] text-white text-xs sm:text-[9px] font-bold shadow-sm whitespace-nowrap">
+                                                <Target className="h-4 w-4 text-white shrink-0" />
+                                                <span>Target : {formatNumberInText(game.target)}</span>
+                                            </div>
+                                        </div>
+
+                                        {/* Reward Row */}
+                                        <div className="flex justify-center items-center px-2 py-1.5 mt-1 border-2 border-white rounded-xl whitespace-nowrap min-h-[36px] transition-all duration-300 bg-brand-gradient border-[#dfa208]/40 shadow-[0_2px_8px_rgba(223,162,8,0.2)]">
+                                            {rewardType === 0 && (
+                                                <div className="font-semibold flex items-center gap-0.5 text-sm sm:text-xs">
+                                                    <Coins className="w-5 h-5 shrink-0 text-black fill-black/10" />
+                                                    <span className="tracking-wide text-black font-bold">
+                                                        {formatNumberInText(game.prize)}
+                                                    </span>
+                                                </div>
+                                            )}
+                                            {rewardType === 1 && (
+                                                <div className="font-semibold flex items-center gap-0.5 text-xs sm:text-[10px]">
+                                                    <Gift className="w-5 h-5 shrink-0 text-black fill-black/10" />
+                                                    <span className="tracking-wide text-black font-bold">
+                                                        {formatNumberInText(game.prize)}
+                                                    </span>
+                                                </div>
+                                            )}
+                                            {rewardType === 2 && (
+                                                <div className="font-semibold flex items-center gap-1 text-xs sm:text-[10px]">
+                                                    <TopupIcon className="w-4 h-4 shrink-0 text-black" />
+                                                    <span className="tracking-wide text-black font-bold">
+                                                        {formatNumberInText(game.prize)}
+                                                    </span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+                            </SwiperSlide>
+                        );
+                    })}
+                </Swiper>
+            </div>
+        </div>
+    );
+};
+
+export default TargetChallengeZone;

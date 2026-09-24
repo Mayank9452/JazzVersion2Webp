@@ -1,0 +1,126 @@
+"use client";
+
+import React from 'react';
+import { X, Sparkles, AlertCircle } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useLanguage } from './context/LanguageContext';
+import { Button } from './ui/button';
+
+interface LowBalancePopupProps {
+  visible: boolean;
+  onClose: () => void;
+  avatarUrl?: string;
+}
+
+export default function LowBalancePopup({ visible, onClose, avatarUrl }: LowBalancePopupProps) {
+  const { t } = useLanguage();
+
+  return (
+    <AnimatePresence>
+      {visible && (
+        <motion.div
+          key="low-balance-popup-root"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/40 backdrop-blur-[5px] will-change-transform"
+          style={{ marginTop: "0px" }}
+        >
+          {/* Main Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 30, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 30, scale: 0.95 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="relative bg-[#282828c2] dark:bg-[#0000002b] backdrop-blur-md rounded-[2.5rem] max-w-sm w-[85%] p-6 border border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col items-center gap-4 overflow-hidden will-change-transform"
+          >
+            {/* Glowing Corner Accents */}
+            <div className="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-yellow-500 rounded-tl-[2.5rem] pointer-events-none" />
+            <div className="absolute top-0 right-0 w-12 h-12 border-t-2 border-r-2 border-yellow-500 rounded-tr-[2.5rem] pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-12 h-12 border-b-2 border-l-2 border-yellow-500 rounded-bl-[2.5rem] pointer-events-none" />
+            <div className="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-yellow-500 rounded-br-[2.5rem] pointer-events-none" />
+
+            {/* Luminous Ambient Glows */}
+            <div className="absolute top-[-20%] right-[-20%] w-[80%] h-[80%] bg-pink-500/10 blur-[60px] rounded-full pointer-events-none animate-pulse" />
+            <div className="absolute bottom-[-20%] left-[-20%] w-[80%] h-[80%] bg-blue-500/10 blur-[80px] rounded-full pointer-events-none animate-pulse" />
+
+            {/* Close Button */}
+            <button
+              onClick={onClose}
+              className="absolute z-[50] top-4 right-4 w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 active:scale-90 border-2 border-yellow-main flex items-center justify-center transition-all"
+            >
+              <X className="h-5 w-5 text-white/60 hover:text-white" />
+            </button>
+
+            {/* Content */}
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15, duration: 0.3 }}
+              className="w-full text-center relative z-10"
+            >
+              {/* Image Visual */}
+              <div className="relative flex justify-center">
+                <motion.div
+                  animate={{
+                    y: [-4, 4, -4],
+                    rotate: [-1, 1, -1]
+                  }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                  className="relative group"
+                >
+                  <div className="relative flex items-center justify-center">
+                    <img
+                      src="/assets/emojis/lb.gif"
+                      className="relative z-10"
+                      alt="Low Balance Robot"
+                      loading="lazy"
+                    />
+
+                    {/* Floating Sparkle Particles */}
+                    <motion.div
+                      animate={{ scale: [0, 1.2, 0], opacity: [0, 1, 0] }}
+                      transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+                      className="absolute top-2 right-2 z-20 pointer-events-none"
+                    >
+                      <Sparkles className="w-4 h-4 text-yellow-400" />
+                    </motion.div>
+                    <motion.div
+                      animate={{ scale: [0, 1, 0], opacity: [0, 0.8, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity, delay: 1.2 }}
+                      className="absolute bottom-2 left-2 z-20 pointer-events-none"
+                    >
+                      <Sparkles className="w-3 h-3 text-pink-400" />
+                    </motion.div>
+                  </div>
+                </motion.div>
+              </div>
+
+              {/* Message Content */}
+              <h2 className="text-xl font-bold text-[#ffc200] leading-tight mb-3">
+                Low Balance !
+              </h2>
+              <p className="text-sm text-blue-100 leading-relaxed">
+                Insufficient balance. Please top up your account to continue playing
+              </p>
+
+              {/* Action Button */}
+              <div className="mt-8 space-y-3">
+                <Button
+                  className="text-base h-12 w-full bg-gradient-to-r from-[#ffd43f] to-[#ffb800] hover:from-[#ffe066] hover:to-[#ffd014] text-[#0b2f5f] font-bold rounded-2xl shadow-lg shadow-pink-900/20 border-2 border-white transition-all active:scale-95"
+                  onClick={onClose}
+                >
+                  {t.okayGotIt || "OK, Got it"}
+                </Button>
+              </div>
+            </motion.div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
