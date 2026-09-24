@@ -65,7 +65,7 @@ const getGameImage = (gameName: string, defaultImage: string) => {
         name.includes("battle")
     ) {
         // return "/assets/images/pistol-bottle-640-360.png";
-        return "/assets/images/VIP-Tournament.png";
+        return "/assets/images/VIP-Tournament.webp";
     }
     return defaultImage;
 };
